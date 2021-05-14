@@ -122,9 +122,10 @@ toolkits or packages will be installed.
    bash scripts/install_kaldi.sh
    ```
    
-4. Extract the models.
+4. Get and Extract the models.
    
    ```
+   curl https://drive.google.com/file/d/1Ua6bFAv-gqJlbytQyuwsoPuG9xX2dh1L/view?usp=sharing -o models.tar.gz
    tar -xzvf models.tar.gz
    ```
 
