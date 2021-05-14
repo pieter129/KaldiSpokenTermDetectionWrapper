@@ -1,0 +1,6 @@
+4,5c4,5
+< [ ! -f /export/babel/data/software/env.sh ] && echo >&2 "The file /export/babel/data/software/env.sh is not present -> Exit!" && exit 1
+< . /export/babel/data/software/env.sh
+---
+> #[ ! -f /export/babel/data/software/env.sh ] && echo >&2 "The file /export/babel/data/software/env.sh is not present -> Exit!" && exit 1
+> #. /export/babel/data/software/env.sh

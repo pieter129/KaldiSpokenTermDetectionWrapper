@@ -1,0 +1,5 @@
+# set -e ; set -o pipefail ; cat /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_7/results | utils/write_kwslist.pl --Ntrue-scale=1.0 --flen=0.01 --duration=2 --segments=/home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/kws_search/data/segments --normalize=true --duptime=0.6 --remove-dup=true --language=afr --map-utter=/home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/kws_search/data/kws/utter_map - /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_7/kwslist.xml 
+# Started at Fri May 14 15:48:09 SAST 2021
+#
+# Accounting: time=0 threads=1
+# Ended (code 0) at Fri May 14 15:48:09 SAST 2021, elapsed time 0 seconds

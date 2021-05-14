@@ -1,0 +1,54 @@
+26c26
+< word_ins_penalty=0
+---
+> word_ins_penalty=0.5
+29a30
+> lang="eng"
+31a33
+> frame_subsampling_factor=3
+106d107
+< frame_subsampling_factor=1
+118d118
+< 
+120,121c120,121
+<         [ ! -z $silence_word ] && silence_opt="--silence-word $silence_word"
+<         steps/make_index.sh $silence_opt --cmd "$cmd" --acwt $acwt $model_flags\
+---
+> 	[ ! -z $silence_word ] && silence_opt="--silence-word $silence_word"
+>         steps/make_index.sh $silence_opt --cmd "$cmd" --lmwt $lmwt --acwt $acwt $model_flags \
+123c123
+<           --word-ins-penalty $word_ins_penalty --max-silence-frames $max_silence_frames\
+---
+>           --word-ins-penalty $word_ins_penalty --max-silence-frames $max_silence_frames \
+134d133
+< 
+141,142c140,141
+<         --strict false --frame-subsampling-factor ${frame_subsampling_factor}\
+<         $kwsdatadir $kwsoutput  || exit 1
+---
+> 	 --strict false --frame-subsampling-factor ${frame_subsampling_factor}\
+> 	 $kwsdatadir $kwsoutput  || exit 1
+179,181c178,180
+<           local/search/filter_kws_results.pl --nbest $nbest | \
+<           sort -u > $kwsoutput/results.${job}
+<         mv $kwsoutput/results.${job} $kwsoutput/results
+---
+> 	  local/search/filter_kws_results.pl --nbest $nbest | \
+>           sort -u > $kwsoutput/results.${job} 
+>          mv $kwsoutput/results.${job} $kwsoutput/results
+186d184
+< 
+195,196c193,194
+<           --segments=$datadir/segments --normalize=false --duptime=$duptime --remove-dup=true\
+<           --map-utter=$kwsdatadir/utter_map\
+---
+>           --segments=$datadir/segments --normalize=false --duptime=$duptime --remove-dup=true --language=$lang \
+> 	  --map-utter=$kwsdatadir/utter_map \
+206,207c204,205
+<         --segments=$datadir/segments --normalize=true --duptime=$duptime --remove-dup=true\
+<         --map-utter=$kwsdatadir/utter_map --digits=3\
+---
+>         --segments=$datadir/segments --normalize=true --duptime=$duptime --remove-dup=true --language=$lang \
+>         --map-utter=$kwsdatadir/utter_map \
+210d207
+< 

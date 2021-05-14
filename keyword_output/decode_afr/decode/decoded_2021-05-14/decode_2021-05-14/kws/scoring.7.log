@@ -1,0 +1,22 @@
+# local/kws_score.sh /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/kws_search/data /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_7 
+# Started at Fri May 14 15:48:09 SAST 2021
+#
+local/kws_score.sh /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/kws_search/data /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_7
+KWSEval -e /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/kws_search/data/kws/ecf.xml -r /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/kws_search/data/kws/rttm -t /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/kws_search/data/kws/kwlist.xml -s /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_7//kwslist.xml -c -o -b -d -f /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_7/
+Loading ECF /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/kws_search/data/kws/ecf.xml
+Loading KWSList File /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_7//kwslist.xml
+Loading KWList File /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/kws_search/data/kws/kwlist.xml
+Loading RTTM File /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/kws_search/data/kws/rttm
+Performing Occurrence Alignment
+Computing requested DET curves and reports
+Building Articulated DETs
+Summary Report: /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_7/sum
+Wrote: /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_7/sum.txt
+Block Summary Report: /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_7/bsum
+Wrote: /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_7/bsum.txt
+Conditional Summary Report: /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_7/cond.sum
+Wrote: /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_7/cond.sum.txt
+Conditional Block Summary Report: /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_7/cond.bsum
+Wrote: /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_7/cond.bsum.txt
+# Accounting: time=0 threads=1
+# Ended (code 0) at Fri May 14 15:48:09 SAST 2021, elapsed time 0 seconds

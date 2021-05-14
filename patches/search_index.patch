@@ -1,0 +1,9 @@
+10a11,12
+> frame_subsampling_factor=
+> 
+25a28
+>    echo "  --frame-subsampling-factor <val>		    # Frame subsampling factor"
+46c49
+<   kws-search --strict=$strict --negative-tolerance=-1 \
+---
+>   kws-search --strict=$strict --negative-tolerance=-1 --frame-subsampling-factor=$frame_subsampling_factor \

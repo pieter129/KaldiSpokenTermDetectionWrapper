@@ -1,0 +1,8 @@
+# copy-vector scp:/home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/segmentation/vad_data/split1/1/vad.scp ark,t:- | sed -e "s/\[ //g;s/ \]//g" | utils/segmentation.pl --remove-noise-only-segments false > /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/segmentation/vad_data/split1/1/subsegments 
+# Started at Fri May 14 15:48:05 SAST 2021
+#
+copy-vector scp:/home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/segmentation/vad_data/split1/1/vad.scp ark,t:- 
+LOG (copy-vector[5.5.821~1-811bd2]:main():copy-vector.cc:90) Copied 1 vectors.
+utils/segmentation.pl: warning: for recording afr_parliament_clip, only got a proportion 0 of silence frames, versus target 0.2
+# Accounting: time=0 threads=1
+# Ended (code 0) at Fri May 14 15:48:05 SAST 2021, elapsed time 0 seconds

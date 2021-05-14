@@ -1,0 +1,19 @@
+# set -e -o pipefail ; mkdir -p /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/score_9/ && lattice-scale --inv-acoustic-scale=9 "ark:gunzip -c /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/lat.*.gz|" ark:- | lattice-add-penalty --word-ins-penalty=0.5 ark:- ark:- | lattice-prune --beam=7 ark:- ark:- | lattice-align-words /home/pieteruys/work/kws/github_kws/kws_test/models/kaldi_afr_8k_sasal_m1.0/exp/chain_cleaned/tdnn1g_sp/graph_sasal_eval/phones/word_boundary.int exp/chain_cleaned/tdnn1g_sp/final.mdl ark:- ark:- | lattice-to-ctm-conf --frame-shift=0.03 --decode-mbr=true ark:- - | utils/int2sym.pl -f 5 /home/pieteruys/work/kws/github_kws/kws_test/models/kaldi_afr_8k_sasal_m1.0/exp/chain_cleaned/tdnn1g_sp/graph_sasal_eval/words.txt > /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/score_9/data_2021-05-14.ctm 
+# Started at Fri May 14 15:48:07 SAST 2021
+#
+lattice-align-words /home/pieteruys/work/kws/github_kws/kws_test/models/kaldi_afr_8k_sasal_m1.0/exp/chain_cleaned/tdnn1g_sp/graph_sasal_eval/phones/word_boundary.int exp/chain_cleaned/tdnn1g_sp/final.mdl ark:- ark:- 
+lattice-prune --beam=7 ark:- ark:- 
+lattice-add-penalty --word-ins-penalty=0.5 ark:- ark:- 
+lattice-scale --inv-acoustic-scale=9 'ark:gunzip -c /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/lat.*.gz|' ark:- 
+lattice-to-ctm-conf --frame-shift=0.03 --decode-mbr=true ark:- - 
+LOG (lattice-scale[5.5.821~1-811bd2]:main():lattice-scale.cc:107) Done 1 lattices.
+LOG (lattice-add-penalty[5.5.821~1-811bd2]:main():lattice-add-penalty.cc:62) Done adding word insertion penalty to 1 lattices.
+LOG (lattice-prune[5.5.821~1-811bd2]:main():lattice-prune.cc:95) For utterance afr_parliament_clip-0000-0398, pruned #states from 360 to 181 and #arcs from 918 to 371
+LOG (lattice-prune[5.5.821~1-811bd2]:main():lattice-prune.cc:104) Overall, pruned from on average 360 to 181 states, and from 918 to 371 arcs, over 1 utterances.
+LOG (lattice-prune[5.5.821~1-811bd2]:main():lattice-prune.cc:108) Done 1 lattices.
+LOG (lattice-align-words[5.5.821~1-811bd2]:main():lattice-align-words.cc:125) Successfully aligned 1 lattices; 0 had errors.
+LOG (lattice-to-ctm-conf[5.5.821~1-811bd2]:main():lattice-to-ctm-conf.cc:175) For utterance afr_parliament_clip-0000-0398, Bayes Risk 2.84988, avg. confidence per-word 0.817965
+LOG (lattice-to-ctm-conf[5.5.821~1-811bd2]:main():lattice-to-ctm-conf.cc:184) Done 1 lattices.
+LOG (lattice-to-ctm-conf[5.5.821~1-811bd2]:main():lattice-to-ctm-conf.cc:185) Overall average Bayes Risk per sentence is 2.84988 and per word, 0.219222
+# Accounting: time=0 threads=1
+# Ended (code 0) at Fri May 14 15:48:07 SAST 2021, elapsed time 0 seconds

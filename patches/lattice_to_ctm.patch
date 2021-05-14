@@ -1,0 +1,176 @@
+1c1,2
+< #!/usr/bin/env bash
+---
+> #!/bin/bash
+> 
+2a4,8
+> # Adapted by Saigen (Pty) Ltd. to allow for optional lattice word alignment.
+> 
+> set -e
+> set -o pipefail
+> set -u
+13,19d18
+< resolve_overlaps=false   # If true, the words decoded in the regions where
+<                          # two segments A and B are overlapping are resolved 
+<                          # such that only words before the mid-point of the
+<                          # overlapping region are taken to be hypothesized for 
+<                          # segment A, and only words after the mid-point of 
+<                          # the overlapping region are taken to be 
+<                          # hypothesized for segment B.
+21a21,22
+> word_alignment=true
+> dir_model=""
+28c29,30
+< . parse_options.sh || exit 1;
+---
+> 
+> . utils/parse_options.sh || exit 1
+31c33
+<   echo "Usage: $0 [options] <dataDir> <langDir|graphDir> <decodeDir>" && exit;
+---
+>   echo "Usage: $0 [options] <in:dataDir> <in:langDir|graphDir> <out:decodeDir>" && exit;
+33,34c35,39
+<   echo "    --cmd (run.pl|queue.pl...)      # specify how to run the sub-processes."
+<   echo "    --stage (0|1)                 # (createCTM | filterCTM )."
+---
+>   echo "    --cmd <run.pl|queue.pl...>	# specify how to run the sub-processes."
+>   echo "    --stage <0|1>		# (createCTM | filterCTM )."
+>   echo "    --dir-model <pointer>	# Model directory"
+>   echo "    --decode-mbr <boolean>	# Decode mbr ($decode_mbr)"
+>   echo "    --word-alignment <boolean>	# Lattice to ctm word alignment ($word_alignment)"
+38,40c43,49
+< data=$1
+< lang=$2 # Note: may be graph directory not lang directory, but has the necessary stuff copied.
+< dir=$3
+---
+> data=`readlink -vf $1`
+> lang=`readlink -vf $2` # Note: may be graph directory not lang directory, but has the necessary stuff copied.
+> dir=`readlink -vf $3`
+> 
+> if [ -z "$dir_model" ]; then
+>   dir_model=`dirname $dir`
+> fi
+43c52
+<   model=`dirname $dir`/final.mdl # Relative path does not work in some cases
+---
+>   model=$dir_model/final.mdl # Relative path does not work in some cases
+48,49c57,58
+< 
+< for f in $lang/words.txt $model $data/segments $data/reco2file_and_channel $dir/lat.1.gz; do
+---
+> for f in $lang/words.txt $lang/phones/word_boundary.int \
+>      $model $dir/lat.1.gz; do
+53,54c62,63
+< if [ -f $dir/../frame_subsampling_factor ]; then
+<   factor=$(cat $dir/../frame_subsampling_factor) || exit 1
+---
+> if [ -f $dir_model/frame_subsampling_factor ]; then
+>   factor=$(cat $dir_model/frame_subsampling_factor) || exit 1
+56c65
+<   echo "$0: $dir/../frame_subsampling_factor exists, using $frame_shift_opt"
+---
+>   echo "$0: $dir_model/frame_subsampling_factor exists, using $frame_shift_opt"
+63,66c72,75
+< resolve_overlaps_cmd="cat"
+< 
+< if $resolve_overlaps; then
+<   resolve_overlaps_cmd="utils/ctm/resolve_ctm_overlaps.py $data/segments - -"
+---
+> if [ $word_alignment = true ]; then
+>   word_align_command="lattice-align-words $lang/phones/word_boundary.int $model ark:- ark:- |"
+> else
+>   word_align_command=""
+70,96c79,89
+<   if [ ! -f $lang/phones/word_boundary.int ] ; then
+<     $cmd LMWT=$min_lmwt:$max_lmwt $dir/scoring/log/get_ctm.LMWT.log \
+<       set -e -o pipefail \; \
+<       mkdir -p $dir/score_LMWT/ '&&' \
+<       lattice-scale --inv-acoustic-scale=LMWT "ark:gunzip -c $dir/lat.*.gz|" ark:- \| \
+<       lattice-add-penalty --word-ins-penalty=$word_ins_penalty ark:- ark:- \| \
+<       lattice-prune --beam=$beam ark:- ark:- \| \
+<       lattice-align-words-lexicon $lang/phones/align_lexicon.int $model ark:- ark:- \| \
+<       lattice-to-ctm-conf $frame_shift_opt --decode-mbr=$decode_mbr ark:- - \| \
+<       utils/int2sym.pl -f 5 $lang/words.txt  \| tee $dir/score_LMWT/$name.utt.ctm \| \
+<       $resolve_overlaps_cmd \| \
+<       utils/convert_ctm.pl $data/segments $data/reco2file_and_channel \
+<       '>' $dir/score_LMWT/$name.ctm || exit 1;
+<   else
+<     $cmd LMWT=$min_lmwt:$max_lmwt $dir/scoring/log/get_ctm.LMWT.log \
+<       set -e -o pipefail \; \
+<       mkdir -p $dir/score_LMWT/ '&&' \
+<       lattice-scale --inv-acoustic-scale=LMWT "ark:gunzip -c $dir/lat.*.gz|" ark:- \| \
+<       lattice-add-penalty --word-ins-penalty=$word_ins_penalty ark:- ark:- \| \
+<       lattice-prune --beam=$beam ark:- ark:- \| \
+<       lattice-align-words $lang/phones/word_boundary.int $model ark:- ark:- \| \
+<       lattice-to-ctm-conf $frame_shift_opt --decode-mbr=$decode_mbr ark:- - \| \
+<       utils/int2sym.pl -f 5 $lang/words.txt  \| tee $dir/score_LMWT/$name.utt.ctm \| \
+<       $resolve_overlaps_cmd \| \
+<       utils/convert_ctm.pl $data/segments $data/reco2file_and_channel \
+<       '>' $dir/score_LMWT/$name.ctm || exit 1;
+<   fi
+---
+>   echo "Alignment = [$word_align_command]"
+>   $cmd LMWT=$min_lmwt:$max_lmwt $dir/scoring/log/get_ctm.LMWT.log \
+>   set -e -o pipefail \; \
+>   mkdir -p $dir/score_LMWT/ '&&' \
+>   lattice-scale --inv-acoustic-scale=LMWT "ark:gunzip -c $dir/lat.*.gz|" ark:- \| \
+>   lattice-add-penalty --word-ins-penalty=$word_ins_penalty ark:- ark:- \| \
+>   lattice-prune --beam=$beam ark:- ark:- \| \
+>   $word_align_command \
+>   lattice-to-ctm-conf $frame_shift_opt --decode-mbr=$decode_mbr ark:- - \| \
+>   utils/int2sym.pl -f 5 $lang/words.txt  \
+>   '>' $dir/score_LMWT/$name.ctm || exit 1;
+100,122c93,110
+<   # Remove some stuff we don't want to score, from the ctm.
+<   for x in $dir/score_*/$name.ctm; do
+<     cp $x $x.bkup1;
+<     cat $x.bkup1 | grep -v -E '\[NOISE|LAUGHTER|VOCALIZED-NOISE\]' | \
+<       grep -v -E '<UNK>|%HESITATION|\(\(\)\)' | \
+<       grep -v -E '<eps>' | \
+<       grep -v -E '<noise>' | \
+<       grep -v -E '<silence>' | \
+<       grep -v -E '<hes>' | \
+<       grep -v -E '<unk>' | \
+<       grep -v -E '<v-noise>' | \
+<       perl -e '@list = (); %list = ();
+<       while(<>) {
+<         chomp;
+<         @col = split(" ", $_);
+<         push(@list, $_);
+<         $key = "$col[0]" . " $col[1]";
+<         $list{$key} = 1;
+<       }
+<       foreach(sort keys %list) {
+<         $key = $_;
+<         foreach(grep(/$key/, @list)) {
+<           print "$_\n";
+---
+>     # Remove some stuff we don't want to score, from the ctm.
+>     for x in $dir/score_*/$name.ctm; do
+>       cp $x $x.bkup1;
+>       cat $x.bkup1 | grep -v -E '\[NOISE|LAUGHTER|VOCALIZED-NOISE\]' | \
+>         grep -v -E '<UNK>|%HESITATION|\(\(\)\)' | \
+>         grep -v -E '<eps>' | \
+>         grep -v -E '<noise>' | \
+>         grep -v -E '<silence>' | \
+>         grep -v -E '<hes>' | \
+>         grep -v -E '<unk>' | \
+>         grep -v -E '<v-noise>' | \
+>         perl -e '@list = (); %list = ();
+>         while(<>) {
+>           chomp;
+>           @col = split(" ", $_);
+>           push(@list, $_);
+>           $key = "$col[0]" . " $col[1]";
+>           $list{$key} = 1;
+124,125c112,118
+<       }' > $x;
+<   done
+---
+>         foreach(sort keys %list) {
+>           $key = $_;
+>           foreach(grep(/$key/, @list)) {
+>             print "$_\n";
+>           }
+>         }' > $x;
+>    done

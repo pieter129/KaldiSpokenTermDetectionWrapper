@@ -1,0 +1,23 @@
+|  Performance Summary Over and Ensemble of Subsets  |
+|               Key               |      Value       |
+|---------------------------------+------------------+
+|                    System Title |               NA |
+|                     Decision ID |       Occurrence |
+|      IncludeBlocksWithNoTargets |                0 |
+|                          TotDur |                2 |
+|                       TotTrials |                2 |
+|                 TrialsPerSecond |                1 |
+|                            BETA |            999.9 |
+|                            Cost |           0.1000 |
+|                           Ptarg |           0.0001 |
+|                           Value |                1 |
+
+
+                      |  MetaData  |                            Characters-006                             |                            NGramOrder-001                             |
+                      |    Text    |  #Targ  |  #Corr  |  #FA  |  #Miss  |   TWV    |    PFA    |  PMISS   |  #Targ  |  #Corr  |  #FA  |  #Miss  |   TWV    |    PFA    |  PMISS   |
+----------------------+------------+---------+---------+-------+---------+----------+-----------+----------+---------+---------+-------+---------+----------+-----------+----------+
+Keyword  KW000-00001  |     elkeen |       1 |       1 |     0 |       0 |   1.0000 |   0.00000 |    0.000 |       1 |       1 |     0 |       0 |   1.0000 |   0.00000 |    0.000 |
+         KW000-00002  |     gevoel |       1 |       1 |     0 |       0 |   1.0000 |   0.00000 |    0.000 |       1 |       1 |     0 |       0 |   1.0000 |   0.00000 |    0.000 |
+Summary  Totals       |            |       2 |       2 |     0 |       0 |          |           |          |       2 |       2 |     0 |       0 |          |           |          |
+         Means        |            |       1 |       1 |     0 |       0 |          |   0.00000 |    0.000 |       1 |       1 |     0 |       0 |          |   0.00000 |    0.000 |
+         TWV          |            |         |         |       |         |   1.0000 |           |          |         |         |       |         |   1.0000 |           |          |

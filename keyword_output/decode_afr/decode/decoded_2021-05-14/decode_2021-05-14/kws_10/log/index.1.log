@@ -1,0 +1,16 @@
+# lattice-add-penalty --word-ins-penalty=0.5 "ark:gzip -cdf /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/lat.1.gz|" ark:- | lattice-align-words --max-expand=180 /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/scripts/../models/kaldi_afr_8k_sasal_m1.0/data/sasal_eval/phones/word_boundary.int /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/final.mdl ark:- ark:- | lattice-scale --acoustic-scale=0.1 --lm-scale=10 ark:- ark:- | lattice-to-kws-index --max-states-scale=4 --allow-partial=true --frame-subsampling-factor=3 --max-silence-frames=50 --strict=true ark:/home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/kws_search/data/kws/utter_id ark:- ark:- | kws-index-union --skip-optimization=false --strict=true --max-states=150000 ark:- "ark:|gzip -c > /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_10/index.1.gz" 
+# Started at Fri May 14 15:48:07 SAST 2021
+#
+kws-index-union --skip-optimization=false --strict=true --max-states=150000 ark:- 'ark:|gzip -c > /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/kws_10/index.1.gz' 
+lattice-add-penalty --word-ins-penalty=0.5 'ark:gzip -cdf /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/decode_2021-05-14/lat.1.gz|' ark:- 
+lattice-scale --acoustic-scale=0.1 --lm-scale=10 ark:- ark:- 
+lattice-align-words --max-expand=180 /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/scripts/../models/kaldi_afr_8k_sasal_m1.0/data/sasal_eval/phones/word_boundary.int /home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/decoded_2021-05-14/final.mdl ark:- ark:- 
+lattice-to-kws-index --max-states-scale=4 --allow-partial=true --frame-subsampling-factor=3 --max-silence-frames=50 --strict=true ark:/home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/kws_search/data/kws/utter_id ark:- ark:- 
+LOG (lattice-add-penalty[5.5.821~1-811bd2]:main():lattice-add-penalty.cc:62) Done adding word insertion penalty to 1 lattices.
+LOG (lattice-align-words[5.5.821~1-811bd2]:main():lattice-align-words.cc:125) Successfully aligned 1 lattices; 0 had errors.
+LOG (lattice-scale[5.5.821~1-811bd2]:main():lattice-scale.cc:107) Done 1 lattices.
+LOG (lattice-to-kws-index[5.5.821~1-811bd2]:main():lattice-to-kws-index.cc:105) Processing lattice afr_parliament_clip-0000-0398
+LOG (lattice-to-kws-index[5.5.821~1-811bd2]:main():lattice-to-kws-index.cc:220) Done 1 lattices, failed for 0
+LOG (kws-index-union[5.5.821~1-811bd2]:main():kws-index-union.cc:104) Done 1 indices
+# Accounting: time=0 threads=1
+# Ended (code 0) at Fri May 14 15:48:07 SAST 2021, elapsed time 0 seconds

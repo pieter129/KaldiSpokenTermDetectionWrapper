@@ -1,0 +1,21 @@
+50d49
+< 
+62,68c61,68
+<   #print Dumper($data->{kw});
+<   foreach $kwentry (@{$data->{kw}}) {
+<     #print Dumper($kwentry);
+<     print "$kwentry->{kwid}\t$kwentry->{kwtext}\n";
+<   }
+< ' > $kwsdatadir/keywords.txt
+< 
+---
+>   if (ref($data->{kw}) eq 'ARRAY') {
+>     foreach $kwentry (@{$data->{kw}}) {
+>       #print Dumper($kwentry);
+>       print "$kwentry->{kwid}\t$kwentry->{kwtext}\n";
+>     }
+>   } elsif (ref($data->{kw}) eq 'HASH') {
+>     print "$data->{kw}{kwid}\t$data->{kw}{kwtext}\n";
+> }' > $kwsdatadir/keywords.txt
+105d104
+< 

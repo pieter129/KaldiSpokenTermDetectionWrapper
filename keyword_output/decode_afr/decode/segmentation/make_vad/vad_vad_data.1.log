@@ -1,0 +1,8 @@
+# compute-vad --config=../../callhome_diarization/v1/conf/vad.conf scp:/home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/segmentation/vad_data/split1/1/feats.scp ark,scp:/home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/segmentation/vad_data/vad_vad_data.1.ark,/home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/segmentation/vad_data/vad_vad_data.1.scp 
+# Started at Fri May 14 15:48:05 SAST 2021
+#
+compute-vad --config=../../callhome_diarization/v1/conf/vad.conf scp:/home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/segmentation/vad_data/split1/1/feats.scp ark,scp:/home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/segmentation/vad_data/vad_vad_data.1.ark,/home/pieteruys/work/kws/github_kws/kws_test/bitbucket_vs_kws/keyword_output/decode_afr/decode/segmentation/vad_data/vad_vad_data.1.scp 
+LOG (compute-vad[5.5.821~1-811bd2]:main():compute-vad.cc:95) Applied energy based voice activity detection; processed 1 utterances successfully; 0 had empty features, and 0 were completely unvoiced.
+LOG (compute-vad[5.5.821~1-811bd2]:main():compute-vad.cc:99) Proportion of voiced frames was 1 over 398 frames.
+# Accounting: time=0 threads=1
+# Ended (code 0) at Fri May 14 15:48:05 SAST 2021, elapsed time 0 seconds

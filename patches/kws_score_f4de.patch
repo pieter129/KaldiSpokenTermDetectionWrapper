@@ -1,0 +1,6 @@
+85,86c85,86
+< KWSEval -e $ecf -r $rttm -t $kwlist -a  --zGlobalMeasures MAP \
+<     --zGlobalMeasures MAPpct --zGlobalMeasures Optimum --zGlobalMeasures Supremum \
+---
+> KWSEval -e $ecf -r $rttm -t $kwlist -a \
+>     --zGlobalMeasures Optimum --zGlobalMeasures Supremum \

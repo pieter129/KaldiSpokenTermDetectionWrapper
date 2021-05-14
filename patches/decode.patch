@@ -1,0 +1,286 @@
+1c1
+< #!/usr/bin/env bash
+---
+> #!/bin/bash
+3,4c3,4
+< # Copyright 2012-2015 Brno University of Technology (author: Karel Vesely), Daniel Povey
+< # Apache 2.0
+---
+> # Copyright 2012-2015  Johns Hopkins University (Author: Daniel Povey).
+> # Apache 2.0.
+6,15c6,7
+< # Begin configuration section.
+< nnet=               # non-default location of DNN (optional)
+< feature_transform=  # non-default location of feature_transform (optional)
+< model=              # non-default location of transition model (optional)
+< class_frame_counts= # non-default location of PDF counts (optional)
+< srcdir=             # non-default location of DNN-dir (decouples model dir from decode dir)
+< ivector=            # rx-specifier with i-vectors (ark-with-vectors),
+< 
+< blocksoftmax_dims=   # 'csl' with block-softmax dimensions: dim1,dim2,dim3,...
+< blocksoftmax_active= # '1' for the 1st block,
+---
+> # This script does decoding with a neural-net.
+> # Adaptation of wsj/decode.sh
+17,18c9,14
+< stage=0 # stage=1 skips lattice generation
+< nj=4
+---
+> # Begin configuration section.
+> stage=1
+> nj=4 # number of decoding jobs.
+> acwt=0.1  # Just a default value, used for adaptation and beam-pruning..
+> post_decode_acwt=1.0  # can be used in 'chain' systems to scale acoustics by 10 so the
+>                       # regular scoring script works.
+20,23c16,18
+< 
+< acwt=0.10 # note: only really affects pruning (scoring is on lattices).
+< beam=13.0
+< lattice_beam=8.0
+---
+> beam=15.0
+> frames_per_chunk=50
+> max_active=7000
+25,28c20,25
+< max_active=7000 # limit of active tokens
+< max_mem=50000000 # approx. limit to memory consumption during minimization in bytes
+< nnet_forward_opts="--no-softmax=true --prior-scale=1.0"
+< 
+---
+> ivector_scale=1.0
+> lattice_beam=8.0 # Beam we use in lattice generation.
+> iter=final
+> num_threads=1 # if >1, will use gmm-latgen-faster-parallel
+> scoring_opts=
+> skip_diagnostics=false
+30,34c27,32
+< scoring_opts="--min-lmwt 4 --max-lmwt 15"
+< 
+< num_threads=1 # if >1, will use latgen-faster-parallel
+< parallel_opts=   # Ignored now.
+< use_gpu="no" # yes|no|optionaly
+---
+> extra_left_context=0
+> extra_right_context=0
+> extra_left_context_initial=-1
+> extra_right_context_final=-1
+> online_ivector_dir=
+> minimize=false
+40c38
+< . parse_options.sh || exit 1;
+---
+> . utils/parse_options.sh || exit 1;
+42,66c40,53
+< set -euo pipefail
+< 
+< if [ $# != 3 ]; then
+<    echo "Usage: $0 [options] <graph-dir> <data-dir> <decode-dir>"
+<    echo "... where <decode-dir> is assumed to be a sub-directory of the directory"
+<    echo " where the DNN and transition model is."
+<    echo "e.g.: $0 exp/dnn1/graph_tgpr data/test exp/dnn1/decode_tgpr"
+<    echo ""
+<    echo "This script works on plain or modified features (CMN,delta+delta-delta),"
+<    echo "which are then sent through feature-transform. It works out what type"
+<    echo "of features you used from content of srcdir."
+<    echo ""
+<    echo "main options (for others, see top of script file)"
+<    echo "  --config <config-file>                           # config containing options"
+<    echo "  --nj <nj>                                        # number of parallel jobs"
+<    echo "  --cmd (utils/run.pl|utils/queue.pl <queue opts>) # how to run jobs."
+<    echo ""
+<    echo "  --nnet <nnet>                                    # non-default location of DNN (opt.)"
+<    echo "  --srcdir <dir>                                   # non-default dir with DNN/models, can be different"
+<    echo "                                                   # from parent dir of <decode-dir>' (opt.)"
+<    echo ""
+<    echo "  --acwt <float>                                   # select acoustic scale for decoding"
+<    echo "  --scoring-opts <opts>                            # options forwarded to local/score.sh"
+<    echo "  --num-threads <N>                                # N>1: run multi-threaded decoder"
+<    exit 1;
+---
+> if [ $# -ne 4 ]; then
+>   echo "Usage: $0 [options] <graph-dir> <data-dir> <decode-dir> <model-dir>"
+>   echo "e.g.:   steps/nnet3/decode.sh --nj 8 \\"
+>   echo "--online-ivector-dir exp/nnet2_online/ivectors_test_eval92 \\"
+>   echo "    exp/tri4b/graph_bg data/test_eval92_hires $dir/decode_bg_eval92"
+>   echo "main options (for others, see top of script file)"
+>   echo "  --config <config-file>                   # config containing options"
+>   echo "  --nj <nj>                                # number of parallel jobs"
+>   echo "  --cmd <cmd>                              # Command to run in parallel with"
+>   echo "  --beam <beam>                            # Decoding beam; default 15.0"
+>   echo "  --iter <iter>                            # Iteration of model to decode; default is final."
+>   echo "  --scoring-opts <string>                  # options to local/score.sh"
+>   echo "  --num-threads <n>                        # number of threads to use, default 1."
+>   exit 1;
+69d55
+< 
+73,74c59,60
+< [ -z $srcdir ] && srcdir=`dirname $dir`; # Default model directory one level up from decoding directory.
+< sdata=$data/split$nj;
+---
+> srcdir=$4
+> model=$srcdir/$iter.mdl
+76d61
+< mkdir -p $dir/log
+78,79c63,69
+< [[ -d $sdata && $data/feats.scp -ot $sdata ]] || split_data.sh $data $nj || exit 1;
+< echo $nj > $dir/num_jobs
+---
+> extra_files=
+> if [ ! -z "$online_ivector_dir" ]; then
+>   steps/nnet2/check_ivectors_compatible.sh $srcdir $online_ivector_dir || exit 1
+>   extra_files="$online_ivector_dir/ivector_online.scp $online_ivector_dir/ivector_period"
+> fi
+> 
+> utils/lang/check_phones_compatible.sh {$srcdir,$graphdir}/phones.txt || exit 1
+81,91c71,72
+< # Select default locations to model files (if not already set externally)
+< [ -z "$nnet" ] && nnet=$srcdir/final.nnet
+< [ -z "$model" ] && model=$srcdir/final.mdl
+< [ -z "$feature_transform" -a -e $srcdir/final.feature_transform ] && feature_transform=$srcdir/final.feature_transform
+< #
+< [ -z "$class_frame_counts" -a -f $srcdir/prior_counts ] && class_frame_counts=$srcdir/prior_counts # priority,
+< [ -z "$class_frame_counts" ] && class_frame_counts=$srcdir/ali_train_pdf.counts
+< 
+< # Check that files exist,
+< for f in $sdata/1/feats.scp $nnet $model $feature_transform $class_frame_counts $graphdir/HCLG.fst; do
+<   [ ! -f $f ] && echo "$0: missing file $f" && exit 1;
+---
+> for f in $graphdir/HCLG.fst $data/feats.scp $model $extra_files; do
+>   [ ! -f $f ] && echo "$0: no such file $f" && exit 1;
+94c75,76
+< # Possibly use multi-threaded decoder
+---
+> sdata=$data/split$nj;
+> cmvn_opts=`cat $srcdir/cmvn_opts` || exit 1;
+97a80,120
+> mkdir -p $dir/log
+> [[ -d $sdata && $data/feats.scp -ot $sdata ]] || split_data.sh $data $nj || exit 1;
+> echo $nj > $dir/num_jobs
+> 
+> 
+> ## Set up features.
+> echo "$0: feature type is raw"
+> 
+> feats="ark,s,cs:apply-cmvn $cmvn_opts --utt2spk=ark:$sdata/JOB/utt2spk scp:$sdata/JOB/cmvn.scp scp:$sdata/JOB/feats.scp ark:- |"
+> 
+> if [ ! -z "$online_ivector_dir" ]; then
+>   ivector_period=$(cat $online_ivector_dir/ivector_period) || exit 1;
+>   ivector_opts="--online-ivectors=scp:$online_ivector_dir/ivector_online.scp --online-ivector-period=$ivector_period"
+> fi
+> 
+> if [ "$post_decode_acwt" == 1.0 ]; then
+>   lat_wspecifier="ark:|gzip -c >$dir/lat.JOB.gz"
+> else
+>   lat_wspecifier="ark:|lattice-scale --acoustic-scale=$post_decode_acwt ark:- ark:- | gzip -c >$dir/lat.JOB.gz"
+> fi
+> 
+> frame_subsampling_opt=
+> if [ -f $srcdir/frame_subsampling_factor ]; then
+>   # e.g. for 'chain' systems
+>   frame_subsampling_opt="--frame-subsampling-factor=$(cat $srcdir/frame_subsampling_factor)"
+> fi
+> 
+> if [ $stage -le 1 ]; then
+>   $cmd --num-threads $num_threads JOB=1:$nj $dir/log/decode.JOB.log \
+>     nnet3-latgen-faster$thread_string $ivector_opts $frame_subsampling_opt \
+>      --frames-per-chunk=$frames_per_chunk \
+>      --extra-left-context=$extra_left_context \
+>      --extra-right-context=$extra_right_context \
+>      --extra-left-context-initial=$extra_left_context_initial \
+>      --extra-right-context-final=$extra_right_context_final \
+>      --minimize=$minimize --max-active=$max_active --min-active=$min_active --beam=$beam \
+>      --lattice-beam=$lattice_beam --acoustic-scale=$acwt --allow-partial=true \
+>      --word-symbol-table=$graphdir/words.txt "$model" \
+>      $graphdir/HCLG.fst "$feats" "$lat_wspecifier" || exit 1;
+> fi
+> 
+99,166c122,126
+< # PREPARE FEATURE EXTRACTION PIPELINE
+< # import config,
+< online_cmvn_opts=
+< cmvn_opts=
+< delta_opts=
+< D=$srcdir
+< [ -e $D/online_cmvn_opts ] && online_cmvn_opts=$(cat $D/online_cmvn_opts)
+< [ -e $D/cmvn_opts ] && cmvn_opts=$(cat $D/cmvn_opts)
+< [ -e $D/delta_opts ] && delta_opts=$(cat $D/delta_opts)
+< #
+< # Create the feature stream,
+< feats="ark,s,cs:copy-feats scp:$sdata/JOB/feats.scp ark:- |"
+< # apply-cmvn-online (optional),
+< [ -n "$online_cmvn_opts" -a ! -f $D/global_cmvn_stats.mat ] && echo "$0: Missing $D/global_cmvn_stats.mat" && exit 1
+< [ -n "$online_cmvn_opts" ] && feats="$feats apply-cmvn-online $online_cmvn_opts --spk2utt=ark:$srcdata/spk2utt $D/global_cmvn_stats.mat ark:- ark:- |"
+< # apply-cmvn (optional),
+< [ -n "$cmvn_opts" -a ! -f $sdata/1/cmvn.scp ] && echo "$0: Missing $sdata/1/cmvn.scp" && exit 1
+< [ -n "$cmvn_opts" ] && feats="$feats apply-cmvn $cmvn_opts --utt2spk=ark:$sdata/JOB/utt2spk scp:$sdata/JOB/cmvn.scp ark:- ark:- |"
+< # add-deltas (optional),
+< [ -n "$delta_opts" ] && feats="$feats add-deltas $delta_opts ark:- ark:- |"
+< 
+< # add-ivector (optional),
+< if [ -e $D/ivector_dim ]; then
+<   [ -z $ivector ] && echo "Missing --ivector, they were used in training!" && exit 1
+<   # Get the tool,
+<   ivector_append_tool=append-vector-to-feats # default,
+<   [ -e $D/ivector_append_tool ] && ivector_append_tool=$(cat $D/ivector_append_tool)
+<   # Check dims,
+<   feats_job_1=$(sed 's:JOB:1:g' <(echo $feats))
+<   dim_raw=$(feat-to-dim "$feats_job_1" -)
+<   dim_raw_and_ivec=$(feat-to-dim "$feats_job_1 $ivector_append_tool ark:- '$ivector' ark:- |" -)
+<   dim_ivec=$((dim_raw_and_ivec - dim_raw))
+<   [ $dim_ivec != "$(cat $D/ivector_dim)" ] && \
+<     echo "Error, i-vector dim. mismatch (expected $(cat $D/ivector_dim), got $dim_ivec in '$ivector')" && \
+<     exit 1
+<   # Append to feats,
+<   feats="$feats $ivector_append_tool ark:- '$ivector' ark:- |"
+< fi
+< 
+< # select a block from blocksoftmax,
+< if [ ! -z "$blocksoftmax_dims" ]; then
+<   # blocksoftmax_active is a csl! dim1,dim2,dim3,...
+<   [ -z "$blocksoftmax_active" ] && echo "$0 Missing option --blocksoftmax-active N" && exit 1
+<   # getting dims,
+<   dim_total=$(awk -F'[:,]' '{ for(i=1;i<=NF;i++) { sum += $i }; print sum; }' <(echo $blocksoftmax_dims))
+<   dim_block=$(awk -F'[:,]' -v active=$blocksoftmax_active '{ print $active; }' <(echo $blocksoftmax_dims))
+<   offset=$(awk -F'[:,]' -v active=$blocksoftmax_active '{ sum=0; for(i=1;i<active;i++) { sum += $i }; print sum; }' <(echo $blocksoftmax_dims))
+<   # create components which select a block,
+<   nnet-initialize <(echo "<Copy> <InputDim> $dim_total <OutputDim> $dim_block <BuildVector> $((1+offset)):$((offset+dim_block)) </BuildVector>";
+<                     echo "<Softmax> <InputDim> $dim_block <OutputDim> $dim_block") $dir/copy_and_softmax.nnet
+<   # nnet is assembled on-the fly, <BlockSoftmax> is removed, while <Copy> + <Softmax> is added,
+<   nnet="nnet-concat 'nnet-copy --remove-last-components=1 $nnet - |' $dir/copy_and_softmax.nnet - |"
+< fi
+< 
+< # Run the decoding in the queue,
+< if [ $stage -le 0 ]; then
+<   $cmd --num-threads $((num_threads+1)) JOB=1:$nj $dir/log/decode.JOB.log \
+<     nnet-forward $nnet_forward_opts --feature-transform=$feature_transform --class-frame-counts=$class_frame_counts --use-gpu=$use_gpu "$nnet" "$feats" ark:- \| \
+<     latgen-faster-mapped$thread_string --min-active=$min_active --max-active=$max_active --max-mem=$max_mem --beam=$beam \
+<     --lattice-beam=$lattice_beam --acoustic-scale=$acwt --allow-partial=true --word-symbol-table=$graphdir/words.txt \
+<     $model $graphdir/HCLG.fst ark:- "ark:|gzip -c > $dir/lat.JOB.gz" || exit 1;
+< fi
+< 
+< # Run the scoring
+< if ! $skip_scoring ; then
+<   [ ! -x local/score.sh ] && \
+<     echo "Not scoring because local/score.sh does not exist or not executable." && exit 1;
+<   local/score.sh $scoring_opts --cmd "$cmd" $data $graphdir $dir || exit 1;
+---
+> if [ $stage -le 2 ]; then
+>   if ! $skip_diagnostics ; then
+>     [ ! -z $iter ] && iter_opt="--iter $iter"
+>     steps/diagnostic/analyze_lats.sh --cmd "$cmd" $iter_opt $graphdir $dir
+>   fi
+168a129,142
+> 
+> # The output of this script is the files "lat.*.gz"-- we'll rescore this at
+> # different acoustic scales to get the final output.
+> if [ $stage -le 3 ]; then
+>   if ! $skip_scoring ; then
+>     [ ! -x local/score.sh ] && \
+>       echo "Not scoring because local/score.sh does not exist or not executable." && exit 1;
+>     echo "score best paths"
+>     [ "$iter" != "final" ] && iter_opt="--iter $iter"
+>     local/score.sh $scoring_opts --cmd "$cmd" $data $graphdir $dir
+>     echo "score confidence and timing with sclite"
+>   fi
+> fi
+> echo "Decoding done."

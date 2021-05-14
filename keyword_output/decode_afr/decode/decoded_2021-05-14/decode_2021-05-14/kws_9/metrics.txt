@@ -1,0 +1,5 @@
+ATWV = 1.0000
+OTWV = 1.0000
+STWV = 1.0000
+MTWV = 1.0000, THRESHOLD = 0.423
+Lattice Recall = 1.0000

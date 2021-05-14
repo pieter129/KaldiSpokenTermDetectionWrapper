@@ -1,0 +1,8 @@
+<kwslist kwlist_filename="" language="afr" system_id="">
+  <detected_kwlist kwid="KW000-00001" kwd_text="elkeen" search_time="1" oov_count="0">
+    <kw file="afr_parliament_clip" channel="1" tbeg="0.45" dur="0.51" score="1" decision="YES"/>
+  </detected_kwlist>
+  <detected_kwlist kwid="KW000-00002" kwd_text="gevoel" search_time="1" oov_count="0">
+    <kw file="afr_parliament_clip" channel="1" tbeg="2.01" dur="0.51" score="1" decision="YES"/>
+  </detected_kwlist>
+</kwslist>
