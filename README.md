@@ -21,9 +21,6 @@ Search system [1], as applied to Afrikaans, isiZulu and Sesotho.
     Developed for Afrikaans, Sesotho and isiZulu.
     <br />
     <br />
-    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
   </p>
 </p>
 <!---------------------------------------------------------------------------->
