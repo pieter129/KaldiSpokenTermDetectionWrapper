@@ -117,12 +117,15 @@ toolkits or packages will be installed.
    * Checks existing software meets requirements.
    * Installs missing [Kaldi](https://github.com/kaldi-asr/kaldi) and [NIST F4DE](https://github.com/usnistgov/F4DE) toolkits.
    * Applies supplied patches to Kaldi toolkit.
-4. Extract the models.
-   
-   * tar -xzvf models.tar.gz
 
    ```
    bash scripts/install_kaldi.sh
+   ```
+   
+4. Extract the models.
+   
+   ```
+   tar -xzvf models.tar.gz
    ```
 
 <!--IMPORTANT NOTE-->
