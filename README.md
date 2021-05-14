@@ -11,7 +11,7 @@ Search system [1], as applied to Afrikaans, isiZulu and Sesotho.
 <!-------------------------- GIT PROJECT LOGO ------------------------------>
 <br />
 <p align="center">
-  <a href="https://github.com/github_username/repo_name">
+  <a href="https://github.com/pieter129/KaldiSpokenTermDetectionWrapper">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
   <h1 align="center">KALDI KEYWORD SPOTTING</h1>
@@ -21,9 +21,6 @@ Search system [1], as applied to Afrikaans, isiZulu and Sesotho.
     Developed for Afrikaans, Sesotho and isiZulu.
     <br />
     <br />
-    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
   </p>
 </p>
 <!---------------------------------------------------------------------------->
@@ -106,7 +103,7 @@ toolkits or packages will be installed.
 1. Clone the repository
 
    ```
-   git clone https://github.com/github_username/repo_name.git
+   git clone https://github.com/pieter129/KaldiSpokenTermDetectionWrapper
    ```
 
 2. Check following paths are set correctly in `conf/var.conf`:
