@@ -125,7 +125,8 @@ toolkits or packages will be installed.
 4. Get and Extract the models.
    
    ```
-   curl https://drive.google.com/file/d/1Ua6bFAv-gqJlbytQyuwsoPuG9xX2dh1L/view?usp=sharing -o models.tar.gz
+   pip install gdown
+   gdown --fuzzy --no-check-certificate https://drive.google.com/file/d/1Ua6bFAv-gqJlbytQyuwsoPuG9xX2dh1L/view?usp=sharing
    tar -xzvf models.tar.gz
    ```
 
