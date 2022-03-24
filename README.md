@@ -126,7 +126,7 @@ toolkits or packages will be installed.
    
    ```
    pip install gdown
-   gdown --fuzzy --no-check-certificate https://drive.google.com/file/d/1jVChw_6R5sBRlJbKgRt3G1e5rNMqEOE8/view?usp=sharing
+   gdown --fuzzy --no-check-certificate https://drive.google.com/file/d/1AqReow_UKIFQsxNKAZ0KrZl-ug_LhDAT/view?usp=sharing
    tar -xzvf models.tar.gz
    ```
 
